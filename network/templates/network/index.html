@@ -1,14 +1,17 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    <div>
-        <form method="post" action="{% url 'post' %}">
-            {% csrf_token %}
-            <Label for="post">New Post</Label>
-            <textarea id="post" name="post"></textarea>
-            <input type="submit" value="Post" />
-        </form>
-    </div>
+
+    {% if user.is_authenticated %}
+        <div>
+            <form method="post" action="{% url 'post' %}">
+                {% csrf_token %}
+                <Label for="post">New Post</Label>
+                <textarea id="post" name="post"></textarea>
+                <input type="submit" value="Post" />
+            </form>
+        </div>
+    {% endif %}
     
     {% for post in posts %}
 

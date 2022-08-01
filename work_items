@@ -3,5 +3,7 @@
 1. create the new post form - done
 2. add implementation for submitting the new post form - done
 3. load all posts - done
+4. Add model class for Post, Comment, Like - done
+5. Implement model migrations - done
 5. style the new post form
 3. 

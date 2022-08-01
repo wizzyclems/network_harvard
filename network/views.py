@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -10,7 +11,7 @@ from .models import Post, User
 
 
 def index(request):
-    posts = Post.objects.all()
+    posts = Post.objects.all().order_by("-timestamp")
 
     return render(request, "network/index.html",{
         "posts": posts
