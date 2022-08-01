@@ -3,12 +3,18 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
-from .models import User
+from .models import Post, User
 
 
 def index(request):
-    return render(request, "network/index.html")
+    posts = Post.objects.all()
+
+    return render(request, "network/index.html",{
+        "posts": posts
+    })
 
 
 def login_view(request):
@@ -63,7 +69,18 @@ def register(request):
         return render(request, "network/register.html")
 
 
-@authenticate
+# @csrf_exempt
+@login_required
 def post(request):
-    pass
+    if request.method == 'POST':
+        print("trying to make a post")
+        post = request.POST["post"]
+        user = request.user
+        post = Post.objects.create(post=post, user=user)
+        post.save()
+        print(f"The user attempting to post is : {user}")
+        print(f"The post is : {post}")
+        return HttpResponseRedirect(reverse("index"))
+    else: 
+        print("Not a post request but Getter")
     

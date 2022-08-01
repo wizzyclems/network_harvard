@@ -1,5 +1,23 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
+    <div>
+        <form method="post" action="{% url 'post' %}">
+            {% csrf_token %}
+            <Label for="post">New Post</Label>
+            <textarea id="post" name="post"></textarea>
+            <input type="submit" value="Post" />
+        </form>
+    </div>
+    
+    {% for post in posts %}
+
+        <div>
+            {{post.user}}<br/>
+            {{post.post}}<br/>
+            {{post.timestamp}}<br/><br/><br/>
+        </div>
+
+    {% endfor %}
+
 {% endblock %}
