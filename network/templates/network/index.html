@@ -1,4 +1,5 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
 
@@ -19,7 +20,7 @@
             {{post.user}}<br/>
             {{post.post}}<br/>
             {{post.timestamp}}<br/>
-            {{post.likes.count}}<br/><br/><br/>
+            <img src="{% static 'network/img/translike.png' %}" width="20px" height="20px" />{{post.likes.count}}<br/><br/><br/>
         </div>
 
     {% endfor %}

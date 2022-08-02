@@ -1,10 +1,28 @@
 
 
+1st August 2022
 1. create the new post form - done
 2. add implementation for submitting the new post form - done
 3. load all posts - done
 4. Add model class for Post, Comment, Like - done
 5. Implement model migrations - done
 6. show the count of likes on a post. - done
+
+2nd August 2022
+7. create a super user in order to access the admin portal - done
+8. make the models appear in the admin portal - done
+9. Add the like button - done
+10. Implement the like backend code - done
+
+
+11. Implement the like javascript call
+
 5. style the new post form
 3. 
+
+
+
+
+Super user
+username: ifiok
+password: user@1234

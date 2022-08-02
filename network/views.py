@@ -1,4 +1,5 @@
-from collections import OrderedDict
+
+import traceback
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -7,7 +8,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 
-from .models import Post, User
+from .models import Post, User, Like, Comment
 
 
 def index(request):
@@ -84,4 +85,24 @@ def post(request):
         return HttpResponseRedirect(reverse("index"))
     else: 
         print("Not a post request but Getter")
-    
+
+
+@csrf_exempt
+@login_required
+def like(request):
+    if request.method == "UPDATE":
+        print("Attempting to update the user like...")
+        user = request.user
+        post_id = request.UPDATE["post_id"]
+
+        try:
+            post = Post.objects.get(id=post_id)
+            like = Like.objects.get(user=user, post=post)
+            if like:
+                like.delete()
+            else:
+                like = Like.objects.create(user=user, post=post_id)
+                like.save()
+
+        except IntegrityError:
+            traceback.print_exc
