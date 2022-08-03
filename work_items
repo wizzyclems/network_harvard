@@ -15,8 +15,14 @@
 10. Implement the like backend code - done
 
 
+3rd August 2022
 11. Implement the like javascript call
+12. Implement the like button image switch both in javascript and html
+13. While loading all post, filter related likes for the logged in user
+14. Tighten the backend like function call
 
+
+12. Style the like button
 5. style the new post form
 3. 
 
@@ -26,3 +32,12 @@
 Super user
 username: ifiok
 password: user@1234
+
+
+kwame
+kwame@test.com
+kwame123
+
+sandra
+sandra@test.com
+sandra

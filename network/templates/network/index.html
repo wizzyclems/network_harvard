@@ -20,7 +20,12 @@
             {{post.user}}<br/>
             {{post.post}}<br/>
             {{post.timestamp}}<br/>
-            <img src="{% static 'network/img/translike.png' %}" width="20px" height="20px" />{{post.likes.count}}<br/><br/><br/>
+
+            {% if not user.is_authenticated or not post.id in user_likes %}
+                <img src="{% static 'network/img/translike.png' %}" data-postid="{{post.id}}" width="20px" height="20px" class="btn_like"  /><span class="likes">{{post.likes.count}}</span><br/><br/><br/>
+            {% else %}
+                <img src="{% static 'network/img/red.png' %}" data-postid="{{post.id}}" width="20px" height="20px" class="btn_like" /><span class="likes">{{post.likes.count}}</span><br/><br/><br/>
+            {% endif %}
         </div>
 
     {% endfor %}

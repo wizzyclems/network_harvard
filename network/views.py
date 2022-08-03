@@ -1,8 +1,9 @@
 
+import json
 import traceback
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
@@ -13,9 +14,18 @@ from .models import Post, User, Like, Comment
 
 def index(request):
     posts = Post.objects.all().order_by("-timestamp")
+    print(f"The user is {request.user}")
+    user_likes = None
+
+    if request.user.is_authenticated :
+        likes = Like.objects.filter(user=request.user)
+        user_likes = [like.post.id for like in likes]
+
+    print(f"The user likes {user_likes}")
 
     return render(request, "network/index.html",{
-        "posts": posts
+        "posts": posts,
+        "user_likes": user_likes
     })
 
 
@@ -89,20 +99,41 @@ def post(request):
 
 @csrf_exempt
 @login_required
-def like(request):
-    if request.method == "UPDATE":
+def like(request, post_id):
+    if request.method == "PUT":
         print("Attempting to update the user like...")
+        print(f"The post id is {post_id}")
         user = request.user
-        post_id = request.UPDATE["post_id"]
+        body = json.loads(request.body)
+        print(f"The message body from the client is { body }")
+        response = ""
+        count_likes = None
+        liked = False
+        message = None
+        stat = None
 
         try:
+
             post = Post.objects.get(id=post_id)
             like = Like.objects.get(user=user, post=post)
-            if like:
-                like.delete()
-            else:
-                like = Like.objects.create(user=user, post=post_id)
-                like.save()
-
-        except IntegrityError:
+            like.delete()
+            message = "Post was successfully unliked."
+            count_likes = Like.objects.filter(post=post).count()
+            stat = 201
+        except Post.DoesNotExist:
+            print("The post does not exist. No action will be taken.")
+            message = "The post does not exist. No action will be taken."
+            stat = 400
             traceback.print_exc
+        except Like.DoesNotExist:
+            print("The user hasn't liked this post yet. We will now create a like entry on this post for the user.")
+            Like.objects.create(user=user, post=post)
+            liked = True
+            message = "Post was successfully liked."
+            count_likes = Like.objects.filter(post=post).count()
+            stat = 201
+            traceback.print_exc
+
+    return JsonResponse({"liked": liked, "count_likes": count_likes, "message": message }, status=stat)
+
+    
