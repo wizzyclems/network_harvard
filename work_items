@@ -23,6 +23,7 @@
 
 4th August 2022
 15. Review existing codes and correct implementations.
+16. Change evt.target.nextSibling to evt.target.nextElementSibling in the javascript.
 
 
 15. Implement like redirect when the user is not logged in
