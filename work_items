@@ -16,12 +16,17 @@
 
 
 3rd August 2022
-11. Implement the like javascript call
-12. Implement the like button image switch both in javascript and html
-13. While loading all post, filter related likes for the logged in user
-14. Tighten the backend like function call
+11. Implement the like javascript call - done
+12. Implement the like button image switch both in javascript and html - done
+13. While loading all post, filter related likes for the logged in user - done
+14. Tighten the backend like function call - done
+
+4th August 2022
+15. Review existing codes and correct implementations.
 
 
+15. Implement like redirect when the user is not logged in
+16. Implement comment redirect when the user is not logged in
 12. Style the like button
 5. style the new post form
 3. 

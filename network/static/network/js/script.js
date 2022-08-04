@@ -14,10 +14,14 @@ document.addEventListener('DOMContentLoaded', function() {
                   'liked': "False"
                 })
             })
-            .then(response => response.json())
+            .then(response => ()=>{
+                console.log("Inside the js response")
+                console.log(response)
+                response.json()
+            })
             .then(result => {
                 evt.target.src = result.liked ?  "/static/network/img/red.png" : "/static/network/img/translike.png" 
-                likes_span = evt.target.nextSibling
+                likes_span = evt.target.nextElementSibling
                 likes_span.innerHTML = result.count_likes == "None" ? likes_span.innerHTML : result.count_likes
             })
         });

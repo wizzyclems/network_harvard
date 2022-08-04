@@ -28,7 +28,7 @@ def index(request):
         "user_likes": user_likes
     })
 
-
+# @csrf_exempt
 def login_view(request):
     if request.method == "POST":
 
@@ -46,6 +46,7 @@ def login_view(request):
                 "message": "Invalid username and/or password."
             })
     else:
+        print("Inside the login view. Now time to redirect to login page.")
         return render(request, "network/login.html")
 
 
@@ -98,7 +99,7 @@ def post(request):
 
 
 @csrf_exempt
-@login_required
+@login_required(redirect_field_name="next", login_url="login")
 def like(request, post_id):
     if request.method == "PUT":
         print("Attempting to update the user like...")
@@ -133,6 +134,9 @@ def like(request, post_id):
             count_likes = Like.objects.filter(post=post).count()
             stat = 201
             traceback.print_exc
+
+    # else:
+
 
     return JsonResponse({"liked": liked, "count_likes": count_likes, "message": message }, status=stat)
 
