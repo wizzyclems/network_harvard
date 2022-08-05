@@ -82,7 +82,7 @@ def register(request):
         return render(request, "network/register.html")
 
 
-# @csrf_exempt
+@csrf_exempt
 @login_required
 def post(request):
     if request.method == 'POST':
@@ -99,45 +99,53 @@ def post(request):
 
 
 @csrf_exempt
-@login_required(redirect_field_name="next", login_url="login")
+# @login_required(redirect_field_name="next", login_url="login")
 def like(request, post_id):
-    if request.method == "PUT":
-        print("Attempting to update the user like...")
-        print(f"The post id is {post_id}")
-        user = request.user
-        body = json.loads(request.body)
-        print(f"The message body from the client is { body }")
-        response = ""
-        count_likes = None
+    if request.user.is_authenticated :
+        if request.method == "PUT":
+            print("Attempting to update the user like...")
+            print(f"The post id is {post_id}")
+            user = request.user
+            body = json.loads(request.body)
+            print(f"The message body from the client is { body }")
+            response = ""
+            count_likes = None
+            liked = False
+            message = None
+            stat = None
+
+            try:
+
+                post = Post.objects.get(id=post_id)
+                like = Like.objects.get(user=user, post=post)
+                like.delete()
+                message = "Post was successfully unliked."
+                count_likes = Like.objects.filter(post=post).count()
+                stat = 201
+            except Post.DoesNotExist:
+                print("The post does not exist. No action will be taken.")
+                message = "The post does not exist. No action will be taken."
+                stat = 400
+                traceback.print_exc
+            except Like.DoesNotExist:
+                print("The user hasn't liked this post yet. We will now create a like entry on this post for the user.")
+                Like.objects.create(user=user, post=post)
+                liked = True
+                message = "Post was successfully liked."
+                count_likes = Like.objects.filter(post=post).count()
+                stat = 201
+                traceback.print_exc
+    else:
+        print("The user is not authenticated. Trigger login operation")
         liked = False
-        message = None
-        stat = None
-
-        try:
-
-            post = Post.objects.get(id=post_id)
-            like = Like.objects.get(user=user, post=post)
-            like.delete()
-            message = "Post was successfully unliked."
-            count_likes = Like.objects.filter(post=post).count()
-            stat = 201
-        except Post.DoesNotExist:
-            print("The post does not exist. No action will be taken.")
-            message = "The post does not exist. No action will be taken."
-            stat = 400
-            traceback.print_exc
-        except Like.DoesNotExist:
-            print("The user hasn't liked this post yet. We will now create a like entry on this post for the user.")
-            Like.objects.create(user=user, post=post)
-            liked = True
-            message = "Post was successfully liked."
-            count_likes = Like.objects.filter(post=post).count()
-            stat = 201
-            traceback.print_exc
-
-    # else:
+        message = "The user is not authenticated. Request login."
+        count_likes = 0
+        stat = 403
 
 
-    return JsonResponse({"liked": liked, "count_likes": count_likes, "message": message }, status=stat)
+    return JsonResponse({"liked": liked, "count_likes": count_likes, "message": message, "status":stat }, status=stat)
 
     
+
+def authenticate_user(request):
+    pass
