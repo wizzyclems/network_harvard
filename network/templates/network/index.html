@@ -3,7 +3,7 @@
 
 {% block body %}
 
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and not show_only_posts %}
         <div>
             <form method="post" action="{% url 'post' %}">
                 {% csrf_token %}
@@ -27,6 +27,9 @@
                 <img src="{% static 'network/img/red.png' %}" data-postid="{{post.id}}" width="20px" height="20px" class="btn_like" /><span class="likes">{{post.likes.count}}</span><br/><br/><br/>
             {% endif %}
         </div>
+
+        {% empty %}
+            <br/><br/><br/><h2>No posts to display. Follow other users to see their posts.</h2>
 
     {% endfor %}
 

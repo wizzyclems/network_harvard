@@ -1,5 +1,6 @@
 
 import json
+import re
 import traceback
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
@@ -9,26 +10,20 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 
-from .models import Post, User, Like, Comment
+from .models import Following, Post, User, Like, Comment
+
 
 
 def index(request):
     posts = Post.objects.all().order_by("-timestamp")
     print(f"The user is {request.user}")
     user_likes = None
+    show_only_posts = False
 
-    if request.user.is_authenticated :
-        likes = Like.objects.filter(user=request.user)
-        user_likes = [like.post.id for like in likes]
+    return load_posts(request=request, posts=posts, user_likes=user_likes, show_only_posts=show_only_posts)
 
-    print(f"The user likes {user_likes}")
 
-    return render(request, "network/index.html",{
-        "posts": posts,
-        "user_likes": user_likes
-    })
 
-# @csrf_exempt
 def login_view(request):
     if request.method == "POST":
 
@@ -50,9 +45,11 @@ def login_view(request):
         return render(request, "network/login.html")
 
 
+
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
+
 
 
 def register(request):
@@ -71,7 +68,6 @@ def register(request):
         # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password)
-            user.save()
         except IntegrityError:
             return render(request, "network/register.html", {
                 "message": "Username already taken."
@@ -80,6 +76,7 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
 
 
 @csrf_exempt
@@ -98,8 +95,8 @@ def post(request):
         print("Not a post request but Getter")
 
 
+
 @csrf_exempt
-# @login_required(redirect_field_name="next", login_url="login")
 def like(request, post_id):
     if request.user.is_authenticated :
         if request.method == "PUT":
@@ -145,7 +142,42 @@ def like(request, post_id):
 
     return JsonResponse({"liked": liked, "count_likes": count_likes, "message": message, "status":stat }, status=stat)
 
-    
+
 
 def authenticate_user(request):
     pass
+
+
+
+@login_required
+def following(request):
+    users_followed = [ following.user_followed for following in Following.objects.filter(user_following=request.user) ]
+    print(f'The followed users are : {users_followed}')
+    posts = None
+
+    user_following=request.user
+    if users_followed :
+        posts = Post.objects.filter(user__contains=users_followed)
+    else:
+        print("You are not following anyone yet. No posts to show.")
+
+    user_likes = None
+    show_only_posts = True
+
+    return load_posts(request=request, posts=posts, user_likes=user_likes, show_only_posts=show_only_posts)
+
+
+
+def load_posts(request, posts, user_likes, show_only_posts):
+
+    if request.user.is_authenticated :
+        likes = Like.objects.filter(user=request.user)
+        user_likes = [like.post.id for like in likes]
+    else:
+        print("The user is not authenticated.")
+
+    return render(request, "network/index.html", {
+        "posts": posts,
+        "user_likes": user_likes,
+        "show_only_posts": show_only_posts
+    })
