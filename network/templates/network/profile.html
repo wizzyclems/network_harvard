@@ -3,7 +3,7 @@
 
 {% block body %}
 
-    {% if user.is_authenticated and 'make_post' in components_to_show %}
+    {% if user.is_authenticated and not show_only_posts %}
         <div>
             <form method="post" action="{% url 'post' %}">
                 {% csrf_token %}
@@ -13,51 +13,25 @@
             </form>
         </div>
     {% endif %}
-
-
-    {% if 'profile' in components_to_show %}
-        <div>
-            <div>
-                <span id="following">{{ profile_user.following.user_followed.count|default:0 }}</span> Following &nbsp;&nbsp;&nbsp;&nbsp;
-                <span id="followers">{{ profile_user.following.user_following.count|default:0  }}</span> Followers
-            </div>
-            
-            {% if user.is_authenticated and user != profile_user %}
-                <div>
-                    <a href="{% url 'follow' profile_user.username %}" type="button" class="btn btn-outline-dark" id="follow_toggle">
-                        {% if follows_user %}
-                            Unfollow
-                        {% else %}
-                            Follow
-                        {% endif %}
-                    </a>
-                </div>
-            {% endif %}
-
-        </div>
-    {% endif %}
-
     
-    {% if 'posts' in components_to_show %}
-        {% for post in posts %}
+    {% for post in posts %}
 
-            <div>
-                <a href="{% url 'profile' post.user.username %}">{{post.user}}</a><br/>
-                {{post.post}}<br/>
-                {{post.timestamp}}<br/>
+        <div>
+            {{post.user}}<br/>
+            {{post.post}}<br/>
+            {{post.timestamp}}<br/>
 
-                {% if not user.is_authenticated or not post.id in user_likes %}
-                    <img src="{% static 'network/img/translike.png' %}" data-postid="{{post.id}}" width="20px" height="20px" class="btn_like"  /><span class="likes">{{post.likes.count}}</span><br/><br/><br/>
-                {% else %}
-                    <img src="{% static 'network/img/red.png' %}" data-postid="{{post.id}}" width="20px" height="20px" class="btn_like" /><span class="likes">{{post.likes.count}}</span><br/><br/><br/>
-                {% endif %}
-            </div>
+            {% if not user.is_authenticated or not post.id in user_likes %}
+                <img src="{% static 'network/img/translike.png' %}" data-postid="{{post.id}}" width="20px" height="20px" class="btn_like"  /><span class="likes">{{post.likes.count}}</span><br/><br/><br/>
+            {% else %}
+                <img src="{% static 'network/img/red.png' %}" data-postid="{{post.id}}" width="20px" height="20px" class="btn_like" /><span class="likes">{{post.likes.count}}</span><br/><br/><br/>
+            {% endif %}
+        </div>
 
-            {% empty %}
-                <br/><br/><br/><h2>No posts to display. Follow other users to see their posts.</h2>
+        {% empty %}
+            <br/><br/><br/><h2>No posts to display. Follow other users to see their posts.</h2>
 
-        {% endfor %}
-    {% endif %}
+    {% endfor %}
 
     <!-- Modal -->
     <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

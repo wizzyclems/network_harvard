@@ -29,14 +29,25 @@
 15. Implement like redirect when the user is not logged in
 16. Implement a login modal for the redirect in item 15.
 
-6th August 2022
+6th August 2022 - Part 1
 17. add the following model
 18. migrate the model for implementation(makemigrations and migrate)
 19. implement html view for the following page
 20. load the following page with posts from the people that the current logged in user follows
 21. implement case where the user does not follow anyone
 22. identify a pattern between index and following views and abstract it into a new function
-22. 
+
+6th August 2022 - Part 2
+23. identify a pattern between index, following, and the profile views and abstract it into a new function while the share the same index template
+24. add the profile page component
+25. Implement following and followers count
+26. return default value of 0 if either following or followers is empty.
+27. Show a Follow/Unfollow toggle button to only users that are logged in and are viewing others profile
+28. implement the backend to follow and unfollow a user from their profile page.
+
+
+7th August 2022
+29. Fix the issue with the count of followers and following not accurate.
 
 Implement comment redirect when the user is not logged in
 12. Style the like button
@@ -58,3 +69,8 @@ kwame123
 sandra
 sandra@test.com
 sandra
+
+
+tomi
+tomi@test.com
+tomi

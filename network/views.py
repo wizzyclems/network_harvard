@@ -1,6 +1,5 @@
 
 import json
-import re
 import traceback
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
@@ -18,9 +17,9 @@ def index(request):
     posts = Post.objects.all().order_by("-timestamp")
     print(f"The user is {request.user}")
     user_likes = None
-    show_only_posts = False
+    components_to_show = ("make_post","posts")
 
-    return load_posts(request=request, posts=posts, user_likes=user_likes, show_only_posts=show_only_posts)
+    return load_posts(request=request, posts=posts, user_likes=user_likes, components_to_show=components_to_show)
 
 
 
@@ -151,24 +150,50 @@ def authenticate_user(request):
 
 @login_required
 def following(request):
-    users_followed = [ following.user_followed for following in Following.objects.filter(user_following=request.user) ]
-    print(f'The followed users are : {users_followed}')
-    posts = None
+    #users_followed = [ following.user_followed for following in Following.objects.filter(user_following=request.user) ]
+    #print(f'The followed users are : {users_followed}')
+    # posts = None
 
-    user_following=request.user
-    if users_followed :
-        posts = Post.objects.filter(user__contains=users_followed)
-    else:
-        print("You are not following anyone yet. No posts to show.")
-
+    # user_following=request.user
+    posts = Post.objects.filter(user__following__user_following=request.user).order_by("-timestamp")
+    #if users_followed :
+        #posts = Post.objects.filter(user__contains=users_followed)
+    #else:
+        #print("You are not following anyone yet. No posts to show.")
+    print(f"The available posts includes {posts}")
     user_likes = None
-    show_only_posts = True
+    components_to_show = ("posts")
 
-    return load_posts(request=request, posts=posts, user_likes=user_likes, show_only_posts=show_only_posts)
+    return load_posts(request=request, posts=posts, user_likes=user_likes, 
+        components_to_show=components_to_show)
 
 
 
-def load_posts(request, posts, user_likes, show_only_posts):
+def profile(request, username):
+
+    profile_user = User.objects.get(username=username)
+    print(f"The profile user is : {profile_user}")
+    posts = Post.objects.filter(user__username=username).order_by("-timestamp")
+    user_likes = None
+    components_to_show = ("profile", "posts")
+
+    user_following = request.user
+    user_followed = User.objects.get(username=username)
+
+    follows_user = False
+    try:
+        following = Following.objects.get(user_following=user_following, user_followed=user_followed)
+        follows_user = True
+    except Following.DoesNotExist:
+        follows_user = False
+       
+
+    return load_posts(request=request, posts=posts, user_likes=user_likes, 
+        components_to_show=components_to_show, profile_user=profile_user, follows_user=follows_user)
+
+
+
+def load_posts(request, posts, user_likes, components_to_show, profile_user=None, follows_user=None):
 
     if request.user.is_authenticated :
         likes = Like.objects.filter(user=request.user)
@@ -179,5 +204,33 @@ def load_posts(request, posts, user_likes, show_only_posts):
     return render(request, "network/index.html", {
         "posts": posts,
         "user_likes": user_likes,
-        "show_only_posts": show_only_posts
+        "components_to_show": components_to_show,
+        "profile_user": profile_user,
+        "follows_user": follows_user
     })
+
+
+@login_required
+def follow(request, username):
+    print(f"The user to follow is { username }")
+    print(f"The user following is {request.user}")
+
+    user_following = request.user
+    user_followed = User.objects.get(username=username)
+
+    try:
+
+        following = Following.objects.get(user_following=user_following, user_followed=user_followed)
+        following.delete()
+
+    except Following.DoesNotExist:
+        print("The user hasn't liked this post yet. We will now create a like entry on this post for the user.")
+        Following.objects.create(user_following=user_following, user_followed=user_followed)
+        traceback.print_exc
+
+    return HttpResponseRedirect(reverse("profile",kwargs={"username": username}))
+
+    
+
+
+

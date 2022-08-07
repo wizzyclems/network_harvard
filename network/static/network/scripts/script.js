@@ -50,4 +50,8 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     
 
+    document.querySelector("#follow_toggle").addEventListener("click", (evt) => {
+        console.log("The follow button was clicked.")
+    })
+
 });

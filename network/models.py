@@ -20,8 +20,6 @@ class Post(models.Model):
     user = models.ForeignKey(User, related_name="posted_by", on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now=True, null=False)
 
-    def __str__(self):
-        pass
 
 
 
@@ -31,9 +29,6 @@ class Comment(models.Model):
     user = models.ForeignKey(User, related_name="comment_by", on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now=True, null=False)
 
-    def __str__(self):
-        pass
-
 
 
 class Like(models.Model):
@@ -41,8 +36,6 @@ class Like(models.Model):
     user = models.ForeignKey(User, related_name="liked_by", on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now=True, null=False)
 
-    def __str__(self):
-        pass
 
 
 
@@ -53,5 +46,4 @@ class Following(models.Model):
     """This field identifies the user that is being followed"""
     user_followed = models.ForeignKey(User, related_name="followed", on_delete=models.CASCADE)
 
-    def __str__(self):
-        pass
+    
