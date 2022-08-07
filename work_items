@@ -48,6 +48,8 @@
 
 7th August 2022
 29. Fix the issue with the count of followers and following not accurate.
+30. clean up the load_posts method to take only 3 parameters. The last one being a meta object that can be manipulated by dependent methods based on the parameters needed for their views.
+31. adjust the index page and other pages to take into account the meta parameter passed to the template views.
 
 Implement comment redirect when the user is not logged in
 12. Style the like button

@@ -16,14 +16,17 @@ from .models import Following, Post, User, Like, Comment
 def index(request):
     posts = Post.objects.all().order_by("-timestamp")
     print(f"The user is {request.user}")
-    user_likes = None
-    components_to_show = ("make_post","posts")
+    
+    meta = { 
+            "components_to_show" : ("make_post","posts")
+        }
 
-    return load_posts(request=request, posts=posts, user_likes=user_likes, components_to_show=components_to_show)
+    return load_posts(request=request, posts=posts, meta_data=meta)
 
 
 
 def login_view(request):
+
     if request.method == "POST":
 
         # Attempt to sign user in
@@ -147,25 +150,21 @@ def authenticate_user(request):
     pass
 
 
-
+""""
+This method loads the posts from the users the currently logged in user follows.
+These posts are ordered by the timestamp in descendingly.
+"""
 @login_required
 def following(request):
-    #users_followed = [ following.user_followed for following in Following.objects.filter(user_following=request.user) ]
-    #print(f'The followed users are : {users_followed}')
-    # posts = None
+    
+    #This is a bit complicated access to multiple objects using the related name relationship.
+    posts = Post.objects.filter(user__followed__user_following=request.user).order_by("-timestamp")
+    
+    meta = { 
+            "components_to_show": ("posts")
+        }
 
-    # user_following=request.user
-    posts = Post.objects.filter(user__following__user_following=request.user).order_by("-timestamp")
-    #if users_followed :
-        #posts = Post.objects.filter(user__contains=users_followed)
-    #else:
-        #print("You are not following anyone yet. No posts to show.")
-    print(f"The available posts includes {posts}")
-    user_likes = None
-    components_to_show = ("posts")
-
-    return load_posts(request=request, posts=posts, user_likes=user_likes, 
-        components_to_show=components_to_show)
+    return load_posts(request=request, posts=posts, meta_data=meta)
 
 
 
@@ -174,9 +173,7 @@ def profile(request, username):
     profile_user = User.objects.get(username=username)
     print(f"The profile user is : {profile_user}")
     posts = Post.objects.filter(user__username=username).order_by("-timestamp")
-    user_likes = None
-    components_to_show = ("profile", "posts")
-
+    
     user_following = request.user
     user_followed = User.objects.get(username=username)
 
@@ -186,14 +183,40 @@ def profile(request, username):
         follows_user = True
     except Following.DoesNotExist:
         follows_user = False
-       
 
-    return load_posts(request=request, posts=posts, user_likes=user_likes, 
-        components_to_show=components_to_show, profile_user=profile_user, follows_user=follows_user)
-
+    count_user_follows = Following.objects.filter(user_following=profile_user).count()
+    count_followers = Following.objects.filter(user_followed=profile_user).count()
 
 
-def load_posts(request, posts, user_likes, components_to_show, profile_user=None, follows_user=None):
+    meta = { 
+            "components_to_show": ("profile", "posts"),
+            "profile_user": profile_user,
+            "follows_user": follows_user,
+            "followers_count": count_followers,
+            "count_user_follows": count_user_follows
+        }
+
+    return load_posts(request=request, posts=posts, meta_data=meta)
+
+
+"""
+This re-usable method loads related posts and likes of the current user to be rendered in the index.html
+template page.
+
+It is called by the following methods
+    a. profile
+    b. index 
+    c. following
+
+"""
+def load_posts(request, posts, user_likes=None, 
+    meta_data={
+        "components_to_show" : None, 
+        "profile_user" : None, 
+        "follows_user" : None,
+        "followers_count": 0,
+        "count_user_follows": 0
+    }):
 
     if request.user.is_authenticated :
         likes = Like.objects.filter(user=request.user)
@@ -202,12 +225,11 @@ def load_posts(request, posts, user_likes, components_to_show, profile_user=None
         print("The user is not authenticated.")
 
     return render(request, "network/index.html", {
-        "posts": posts,
-        "user_likes": user_likes,
-        "components_to_show": components_to_show,
-        "profile_user": profile_user,
-        "follows_user": follows_user
+        "posts" : posts,
+        "user_likes" : user_likes,
+        "meta" : meta_data
     })
+
 
 
 @login_required

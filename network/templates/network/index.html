@@ -3,7 +3,7 @@
 
 {% block body %}
 
-    {% if user.is_authenticated and 'make_post' in components_to_show %}
+    {% if user.is_authenticated and 'make_post' in meta.components_to_show %}
         <div>
             <form method="post" action="{% url 'post' %}">
                 {% csrf_token %}
@@ -15,17 +15,18 @@
     {% endif %}
 
 
-    {% if 'profile' in components_to_show %}
+    {% if 'profile' in meta.components_to_show %}
         <div>
+    
             <div>
-                <span id="following">{{ profile_user.following.user_followed.count|default:0 }}</span> Following &nbsp;&nbsp;&nbsp;&nbsp;
-                <span id="followers">{{ profile_user.following.user_following.count|default:0  }}</span> Followers
+                <strong><span id="following">{{ meta.count_user_follows|default:0 }}</span></strong> Following &nbsp;&nbsp;&nbsp;&nbsp;
+                <strong><span id="followers">{{ meta.followers_count|default:0  }}</span></strong> Followers
             </div>
             
-            {% if user.is_authenticated and user != profile_user %}
+            {% if user.is_authenticated and user != meta.profile_user %}
                 <div>
-                    <a href="{% url 'follow' profile_user.username %}" type="button" class="btn btn-outline-dark" id="follow_toggle">
-                        {% if follows_user %}
+                    <a href="{% url 'follow' meta.profile_user.username %}" type="button" class="btn btn-outline-dark" id="follow_toggle">
+                        {% if meta.follows_user %}
                             Unfollow
                         {% else %}
                             Follow
@@ -38,7 +39,7 @@
     {% endif %}
 
     
-    {% if 'posts' in components_to_show %}
+    {% if 'posts' in meta.components_to_show %}
         {% for post in posts %}
 
             <div>
