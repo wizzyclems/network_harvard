@@ -97,6 +97,28 @@ def post(request):
         print("Not a post request but Getter")
 
 
+@csrf_exempt
+@login_required
+def edit(request, post_id):
+    
+    if request.method == 'POST':
+        user = request.user
+        post = Post.objects.get(id=post_id)
+
+        if user != post.user:
+            print("You cannot edit another user's post.")
+            return 
+
+        print("trying to make a post")
+        post = request.POST["post"]
+        post.post = post
+        post.save()
+
+        return HttpResponseRedirect(reverse("index"))
+    else: 
+        print("Not a post request but Getter")
+
+
 
 @csrf_exempt
 def like(request, post_id):
@@ -150,6 +172,7 @@ def authenticate_user(request):
     pass
 
 
+
 """"
 This method loads the posts from the users the currently logged in user follows.
 These posts are ordered by the timestamp in descendingly.
@@ -197,6 +220,7 @@ def profile(request, username):
         }
 
     return load_posts(request=request, posts=posts, meta_data=meta)
+
 
 
 """

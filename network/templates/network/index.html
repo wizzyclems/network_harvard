@@ -43,15 +43,30 @@
         {% for post in posts %}
 
             <div>
-                <a href="{% url 'profile' post.user.username %}">{{post.user}}</a><br/>
-                {{post.post}}<br/>
-                {{post.timestamp}}<br/>
+                <div>
+                    <a href="{% url 'profile' post.user.username %}">{{post.user}}</a><br/>
 
-                {% if not user.is_authenticated or not post.id in user_likes %}
-                    <img src="{% static 'network/img/translike.png' %}" data-postid="{{post.id}}" width="20px" height="20px" class="btn_like"  /><span class="likes">{{post.likes.count}}</span><br/><br/><br/>
-                {% else %}
-                    <img src="{% static 'network/img/red.png' %}" data-postid="{{post.id}}" width="20px" height="20px" class="btn_like" /><span class="likes">{{post.likes.count}}</span><br/><br/><br/>
+                    {% if user == post.user %}
+                        <a href="{% url 'edit' post.id %}" type="button" class="btn btn-outline-dark" id="edit_toggle">Edit</a>
+                    {% endif %}
+                </div>
+                {% if user == post.user %}
+                    <div style="display: none;">
+                        <div id="post_content">{{post.post}}<br/></div>
+                        <div id="post_content_div"><textarea id="post_content_edit"></textarea></div>
+                        <div><button type="button"> Cancel</button><button type="button">Save</button></div>
+                    </div>
                 {% endif %}
+                <div>
+                    <div>{{post.timestamp}}<br/></div>
+                    <div>
+                        {% if not user.is_authenticated or not post.id in user_likes %}
+                            <img src="{% static 'network/img/translike.png' %}" data-postid="{{post.id}}" width="20px" height="20px" class="btn_like"  /><span class="likes">{{post.likes.count}}</span><br/><br/><br/>
+                        {% else %}
+                            <img src="{% static 'network/img/red.png' %}" data-postid="{{post.id}}" width="20px" height="20px" class="btn_like" /><span class="likes">{{post.likes.count}}</span><br/><br/><br/>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
 
             {% empty %}

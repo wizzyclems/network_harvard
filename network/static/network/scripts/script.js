@@ -54,4 +54,21 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("The follow button was clicked.")
     })
 
+
+    document.querySelector("#edit_toggle").addEventListener("click", (evt) => {
+        console.log("The follow button was clicked.")
+        post_content_edit = document.querySelector("#post_content_edit")
+
+        fetch('/post/edit/' + post_id,{
+            method: 'PUT',
+            body: JSON.stringify({
+              'post_id': post_id
+            })
+        })
+        .then( response.json() )
+        .then(result => {
+            
+        })
+    })
+
 });
