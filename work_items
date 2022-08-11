@@ -65,10 +65,18 @@
 38. add javascript implementation for the save button
 
 11th August 2022
-39. ensure the edit button cannot be clicked twice for a single post
-40. ensure the auto-created components are distinctly identified using event targets instead of id.
+39. ensure the javascript implementation for the edit button applies to all edit button in the view
+40. ensure the edit button cannot be clicked twice for a single post by disabling it onclick
+41. ensure the auto-created components are distinctly identified using event targets instead of id.
+42. store the retrieve post edit items in the browsers session storage as a json object
+43. remove the post edit items from the browser's session storage once the cancel button is clicked
+44. enable the edit buttons once the cancel button is clicked
+45. implement backend code for the save button to allow edit of a post and return response and status to the client only on put requet method.
+46. implement javascript for the save button to make backend calls, and use the response to display to the client.
+47. enable the edit buttons once save is successfully completed and purge the browser's session storage.
 
 
+restrict a username to each user by ensuring they are unique across the system
 Implement comment redirect when the user is not logged in
 12. Style the like button
 5. style the new post form

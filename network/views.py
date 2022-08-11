@@ -101,20 +101,27 @@ def post(request):
 @login_required
 def edit(request, post_id):
     
-    if request.method == 'POST':
+    if request.method == 'PUT':
         user = request.user
-        post = Post.objects.get(id=post_id)
+        try:
+            post = Post.objects.get(id=post_id)
 
-        if user != post.user:
-            print("You cannot edit another user's post.")
-            return 
+            if user != post.user:
+                print("You cannot edit another user's post.")
+                return JsonResponse({"post_id": post.id, "message": "You cannot edit another user's post.", "status":401 }, status=401) 
 
-        print("trying to make a post")
-        post = request.POST["post"]
-        post.post = post
-        post.save()
+            request_body = json.loads(request.body)
+            print(f"the edit post request body is {request_body}")
+            post_content = request_body.get("post_content")
+            print("trying to make a post")
+            
+            post.post = post_content
+            post.save()
+        except Post.DoesNotExist:
+            traceback.print_exc
+            return JsonResponse({"post_id": post_id, "message": "The requested post does not exist.", "status":400 }, status=400) 
 
-        return HttpResponseRedirect(reverse("index"))
+        return JsonResponse({"post_id": post.id, "message": "Your post was successfully edited.", "status":201 }, status=201) 
     else: 
         print("Not a post request but Getter")
 
