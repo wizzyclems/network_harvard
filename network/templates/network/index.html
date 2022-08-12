@@ -4,7 +4,7 @@
 {% block body %}
 
     {% if user.is_authenticated and 'make_post' in meta.components_to_show %}
-        <div>
+        <div class="container">
             <form method="post" action="{% url 'post' %}">
                 {% csrf_token %}
                 <Label for="post">New Post</Label>
@@ -16,7 +16,7 @@
 
 
     {% if 'profile' in meta.components_to_show %}
-        <div>
+        <div class="container">
     
             <div>
                 <strong><span id="following">{{ meta.count_user_follows|default:0 }}</span></strong> Following &nbsp;&nbsp;&nbsp;&nbsp;
@@ -38,37 +38,77 @@
         </div>
     {% endif %}
 
-    
+    <!-- The List of Posts -->
     {% if 'posts' in meta.components_to_show %}
-        {% for post in posts %}
+        
 
-            <div>
-                <div>
-                    <a href="{% url 'profile' post.user.username %}">{{post.user}}</a><br/>
-
-                    {% if user == post.user %}
-                        <button type="button" class="btn btn-outline-dark edit_toggle" data-postid="{{post.id}}" >Edit</a>
-                    {% endif %}
-                </div>
-                <div id="post_div">
-                    <div id="post_content">{{post.post}}</div>
-                </div>
-                <div>
-                    <div>{{post.timestamp}}<br/></div>
-                    <div>
-                        {% if not user.is_authenticated or not post.id in user_likes %}
-                            <img src="{% static 'network/img/translike.png' %}" data-postid="{{post.id}}" width="20px" height="20px" class="btn_like"  /><span class="likes">{{post.likes.count}}</span><br/><br/><br/>
-                        {% else %}
-                            <img src="{% static 'network/img/red.png' %}" data-postid="{{post.id}}" width="20px" height="20px" class="btn_like" /><span class="likes">{{post.likes.count}}</span><br/><br/><br/>
-                        {% endif %}
+            <div class="container">
+                {% for post in posts %}
+                    <div class="row  align-items-center post">
+                        <div class="col-2 justify-content-center" style="padding: 10px 30px;">
+                            <img width="50" height="50" style="border-radius: 60px;" src="{% static 'network/img/user.png' %}" alt=""  />
+                        </div>
+                        <div class="col-10">
+                            <div class="row align-items-start post_meta">
+                                <div class="col-10">
+                                    <a class="fullname" href="{% url 'profile' post.user.username %}">{{ post.user.first_name|upper }} {{ post.user.last_name|upper }}</a><span class="username">@{{post.user}}</span>
+                                </div>
+                            </div>
+                            <div class="row align-items-center" id="post_div">
+                                <div class="col-12 post_content">{{post.post}}</div>
+                            </div>
+                            <div class="row  align-items-end post_meta_bottom">
+                                <div class="col-8">
+                                    <div class="username">{{post.timestamp}}</div>
+                                </div>
+                                <div class="col-2 ">
+                                    {% if not user.is_authenticated or not post.id in user_likes %}
+                                         <img src="{% static 'network/img/translike.png' %}" data-postid="{{post.id}}" class="btn_like post_meta_items_unlike"  />&nbsp;&nbsp;<span class="likes">{{post.likes.count}}</span>
+                                    
+                                        <!-- <span data-postid="{{post.id}}" class="btn_like post_meta_items_unlike">&#9825; </span> <span class="likes">{{post.likes.count}}</span> -->
+                                    {% else %}
+                                        <img src="{% static 'network/img/red.png' %}" data-postid="{{post.id}}" class="btn_like post_meta_items_like" />&nbsp;&nbsp;<span class="likes">{{post.likes.count}}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="col-2">
+                                    {% if user == post.user %}
+                                        <img src="{% static 'network/img/edit.png' %}" class="edit_button" data-postid="{{post.id}}" />
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                {% empty %}
+                        <br/><br/><br/><h2>No posts to display. Follow other users to see their posts.</h2>
+
+                {% endfor %}
+
             </div>
 
-            {% empty %}
-                <br/><br/><br/><h2>No posts to display. Follow other users to see their posts.</h2>
+            
 
-        {% endfor %}
+        <!-- Pagination -->
+        {% if posts.paginator.num_pages > 0 %}
+            <div class="container pagination">
+                <span class="step-links">
+                    {% if posts.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ posts.previous_page_number }}">previous</a>
+                    {% endif %}
+            
+                    <span class="current">
+                        Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
+                    </span>
+            
+                    {% if posts.has_next %}
+                        <a href="?page={{ posts.next_page_number }}">next</a>
+                        <a href="?page={{ posts.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        {% endif %}
+
+
     {% endif %}
 
     <!-- Modal -->

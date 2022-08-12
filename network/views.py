@@ -8,15 +8,17 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 from .models import Following, Post, User, Like, Comment
 
 
 
 def index(request):
+
     posts = Post.objects.all().order_by("-timestamp")
-    print(f"The user is {request.user}")
     
+
     meta = { 
             "components_to_show" : ("make_post","posts")
         }
@@ -190,6 +192,7 @@ def following(request):
     #This is a bit complicated access to multiple objects using the related name relationship.
     posts = Post.objects.filter(user__followed__user_following=request.user).order_by("-timestamp")
     
+
     meta = { 
             "components_to_show": ("posts")
         }
@@ -255,8 +258,19 @@ def load_posts(request, posts, user_likes=None,
     else:
         print("The user is not authenticated.")
 
+    paginator = Paginator(posts, 10)
+    page_number = 1
+
+    try:
+        page_number = request.GET.get('page')
+    except Exception:
+        print("The paginator page number threw and exception.")
+        traceback.print_exc
+
+    new_posts = paginator.get_page(page_number)
+
     return render(request, "network/index.html", {
-        "posts" : posts,
+        "posts" : new_posts,
         "user_likes" : user_likes,
         "meta" : meta_data
     })

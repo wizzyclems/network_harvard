@@ -64,7 +64,7 @@
 37. add javascript implementation for the cancel button
 38. add javascript implementation for the save button
 
-11th August 2022
+11th August 2022 - Part 1
 39. ensure the javascript implementation for the edit button applies to all edit button in the view
 40. ensure the edit button cannot be clicked twice for a single post by disabling it onclick
 41. ensure the auto-created components are distinctly identified using event targets instead of id.
@@ -76,11 +76,23 @@
 47. enable the edit buttons once save is successfully completed and purge the browser's session storage.
 
 
+12th August 2022
+48. add django pagination code in the index page template
+49. Add paginator code to the view backend
+50. style the posts lists
+51. change the edit button to a pencil icon
+52. correct javascript implementation for the edit button
+53. style the edit textarea, cancel, and save buttons.
+
+
+13th August 2022
+54. correct the case of disabling the edit image when it is already clicked for one item
+
 restrict a username to each user by ensuring they are unique across the system
 Implement comment redirect when the user is not logged in
 12. Style the like button
 5. style the new post form
-3. 
+3. enforce input of first naem and last name when users register
 
 
 

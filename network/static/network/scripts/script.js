@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Use buttons to toggle between views
     document.querySelectorAll('.btn_like').forEach(element => {
         element.addEventListener('click', (evt) => {
-            
+            console.log("the like button was clicked.")
             post_id = evt.target.dataset.postid
             
 
@@ -51,39 +51,47 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // if( document.querySelector(".edit_toggle") != null ){
-    document.querySelectorAll('.edit_toggle').forEach(element => {
+    // This is the click event for the edit button
+    document.querySelectorAll('.edit_button').forEach(element => {
         element.addEventListener('click', (evt) => {
-            
+            console.log("An edit button was clicked.")
             target_edit_btn = evt.target
-            target_post_div = target_edit_btn.parentElement.nextElementSibling
+            target_post_div = target_edit_btn.parentElement.parentElement.previousElementSibling
 
             post_id = target_edit_btn.dataset.postid
+            console.log(`The post id is ${post_id}`)
             post_content = target_post_div.innerText
 
             //Extract items from the browsers session storage for re-use.
-            // sessionStorage.setItem("post_id", post_id)
-            // sessionStorage.setItem("post_content", post_content)
-            
             cache_data = `{"post_id": "${post_id}", "post_content": "${post_content}"}`
             // cache_data = "{" + post_id + ": " + post_id + ", post_content: " + post_content + "}"
             console.log(cache_data)
             sessionStorage.setItem("post_edit_info", cache_data)
 
             post_edit_div = document.createElement("div")
+            post_edit_div.setAttribute("class", "col-12 post_content")
 
             textarea_div = document.createElement("div")
+            textarea_div.setAttribute("class", "row")
+            textarea_div.setAttribute("style", "width:95%")
+
             textarea = document.createElement("textarea")
             textarea.setAttribute("id", "txtarea_post_edit")
+            textarea.setAttribute("class", "form-control")
             textarea.innerHTML = post_content
             textarea.dataset.postid = post_id
 
             textarea_div.append(textarea)
 
             buttons_div = document.createElement("div")
+            buttons_div.setAttribute("class", "row justify-content-end")
+            buttons_div.setAttribute("style", "width:95%")
 
             cancel_btn = document.createElement("button")
             cancel_btn.innerHTML = "Cancel"
-            cancel_btn.setAttribute("class", "cancel_post_edit")
+            cancel_btn.setAttribute("class", "btn btn-outline-secondary btn-sm cancel_post_edit")
+            cancel_btn.setAttribute("type", "button")
+            cancel_btn.setAttribute("style", "margin:5px;")
             cancel_btn.onclick = (evt) => {
 
                 //Retrieve edit info from the browser's session storage
@@ -109,7 +117,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             save_btn = document.createElement("button")
             save_btn.innerHTML = "Save"
-            save_btn.setAttribute("class", "save_post_edit")
+            save_btn.setAttribute("type", "button")
+            save_btn.setAttribute("class", "btn btn-outline-secondary btn-sm save_post_edit")
+            save_btn.setAttribute("style", "margin:5px")
             save_btn.onclick = (evt) => {
                 //Get the post content from the browser's session storage and display
                 post_edit_info = JSON.parse(sessionStorage.getItem("post_edit_info"))
@@ -170,13 +180,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function enable_edit_buttons(status){
-    document.querySelectorAll('.edit_toggle').forEach(element => {
+    document.querySelectorAll('.edit_button').forEach(element => {
         if( status ){
             element.removeAttribute("disabled")
         }else{
-            document.querySelectorAll('.edit_toggle').forEach(element => {
+            // document.querySelectorAll('.edit_button').forEach(element => {
                 element.setAttribute("disabled","disabled")
-            })
+            // })
         }
     })
 }
