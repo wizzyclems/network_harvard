@@ -86,13 +86,22 @@
 
 
 13th August 2022
-54. correct the case of disabling the edit image when it is already clicked for one item
+54. style the profile component
+55. style the post component
+56. include a title on the posts component
+57. style the nav bar
+58. Style the like button
+59. style the edit button
+60. style the paginator component - part 1
+
+
+correct the case of disabling the edit image when it is already clicked for one item
+
 
 restrict a username to each user by ensuring they are unique across the system
 Implement comment redirect when the user is not logged in
-12. Style the like button
-5. style the new post form
 3. enforce input of first naem and last name when users register
+4. allow users to upload their profile image
 
 
 

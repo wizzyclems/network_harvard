@@ -3,37 +3,72 @@
 
 {% block body %}
 
+    <!-- New Posts -->
     {% if user.is_authenticated and 'make_post' in meta.components_to_show %}
-        <div class="container">
+        <div class="container" style="margin: 20px auto; padding: 20px;">
             <form method="post" action="{% url 'post' %}">
-                {% csrf_token %}
-                <Label for="post">New Post</Label>
-                <textarea id="post" name="post"></textarea>
-                <input type="submit" value="Post" />
+                <div class="form-row">
+                    {% csrf_token %}
+                    <h4>New Post</h4>
+                    <textarea id="post" class="form-control" name="post" rows="3" placeholder="What's happening?"></textarea>
+                    <small id="emailHelp" class="form-text text-muted">Share your thoughts with friends across the world in 255 characters.</small>
+                </div>
+                <div class="form-row justify-content-end">
+                    <button type="submit" class="btn btn-dark" style="border-radius:20px;" >Post</button>
+                </div>
             </form>
         </div>
     {% endif %}
 
 
+    <!-- The Profile Page -->
     {% if 'profile' in meta.components_to_show %}
-        <div class="container">
+        <div class="container" style="background-color:#f2f2f2; margin: 20px auto; padding: 20px;">
     
-            <div>
-                <strong><span id="following">{{ meta.count_user_follows|default:0 }}</span></strong> Following &nbsp;&nbsp;&nbsp;&nbsp;
-                <strong><span id="followers">{{ meta.followers_count|default:0  }}</span></strong> Followers
-            </div>
-            
-            {% if user.is_authenticated and user != meta.profile_user %}
-                <div>
-                    <a href="{% url 'follow' meta.profile_user.username %}" type="button" class="btn btn-outline-dark" id="follow_toggle">
-                        {% if meta.follows_user %}
-                            Unfollow
-                        {% else %}
-                            Follow
-                        {% endif %}
-                    </a>
+            <div class="row align-items-center">
+                <div class="col-4">
+                    <img width="100" height="100" style="border-radius: 60px;" src="{% static 'network/img/user.png' %}" alt=""  />
                 </div>
-            {% endif %}
+                <div class="col-8">
+                    <div class="row">
+                        <div class="col-8">
+                            <h5>{{ meta.profile_user.first_name|upper }} {{ meta.profile_user.last_name|upper }}</h5>
+                        </div>
+                        <div class="col-4">
+                            {% if user.is_authenticated and user != meta.profile_user %}
+                            
+                                <a href="{% url 'follow' meta.profile_user.username %}" type="button" class="btn btn-outline-dark" id="follow_toggle">
+                                    {% if meta.follows_user %}
+                                        Unfollow
+                                    {% else %}
+                                        Follow
+                                    {% endif %}
+                                </a>
+                                
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"><div class="col">    </div></div>
+            <div class="row"><div class="col">    </div></div>
+            <div class="row">
+                <div class="col" style="padding: 10px;">
+                    Food, Fashion, Enterprise, Politics.
+                </div>
+            </div>
+            <div class="row" style="padding: 10px;">
+                <div class="col-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
+                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                    </svg>  
+                    Joined on {{ meta.profile_user.date_joined|date:"M Y" }}
+                </div>
+                <div class="col-6">
+                    <strong><span id="following">{{ meta.count_user_follows|default:0 }}</span></strong> Following &nbsp;&nbsp;&nbsp;&nbsp;
+                    <strong><span id="followers">{{ meta.followers_count|default:0  }}</span></strong> Followers
+                </div>
+            </div>
 
         </div>
     {% endif %}
@@ -42,7 +77,12 @@
     {% if 'posts' in meta.components_to_show %}
         
 
-            <div class="container">
+            <div class="container" style="margin: 20px auto 10px auto;">
+                <div class="row  align-items-center post">
+                    <div class="col">
+                        <h4>Posts</h4>
+                    </div>
+                </div>
                 {% for post in posts %}
                     <div class="row  align-items-center post">
                         <div class="col-2 justify-content-center" style="padding: 10px 30px;">
@@ -63,23 +103,27 @@
                                 </div>
                                 <div class="col-2 ">
                                     {% if not user.is_authenticated or not post.id in user_likes %}
-                                         <img src="{% static 'network/img/translike.png' %}" data-postid="{{post.id}}" class="btn_like post_meta_items_unlike"  />&nbsp;&nbsp;<span class="likes">{{post.likes.count}}</span>
+                                         <img src="{% static 'network/img/translike.png' %}" data-postid="{{post.id}}" class="mylikes_unlike btn_like post_meta_items_unlike"  />&nbsp;&nbsp;<span class="likes">{{post.likes.count}}</span>
                                     
                                         <!-- <span data-postid="{{post.id}}" class="btn_like post_meta_items_unlike">&#9825; </span> <span class="likes">{{post.likes.count}}</span> -->
                                     {% else %}
-                                        <img src="{% static 'network/img/red.png' %}" data-postid="{{post.id}}" class="btn_like post_meta_items_like" />&nbsp;&nbsp;<span class="likes">{{post.likes.count}}</span>
+                                        <img src="{% static 'network/img/red.png' %}" data-postid="{{post.id}}" class="mylikes_like btn_like post_meta_items_like" />&nbsp;&nbsp;<span class="likes">{{post.likes.count}}</span>
                                     {% endif %}
                                 </div>
                                 <div class="col-2">
                                     {% if user == post.user %}
-                                        <img src="{% static 'network/img/edit.png' %}" class="edit_button" data-postid="{{post.id}}" />
+                                        <img src="{% static 'network/img/edit.png' %}" class="edit_button mylikes_unlike" data-postid="{{post.id}}" />
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
                     </div>
                 {% empty %}
-                        <br/><br/><br/><h2>No posts to display. Follow other users to see their posts.</h2>
+                        <div class="row" style="padding: 20px;">
+                            <div class="col">
+                                <h7>No posts to display. Follow other users to see their posts.</h7>
+                            </div>
+                        </div>
 
                 {% endfor %}
 
@@ -88,8 +132,8 @@
             
 
         <!-- Pagination -->
-        {% if posts.paginator.num_pages > 0 %}
-            <div class="container pagination">
+        {% if posts.paginator.num_pages > 1 %}
+            <div class="container" style="margin-bottom: 30px">
                 <span class="step-links">
                     {% if posts.has_previous %}
                         <a href="?page=1">&laquo; first</a>
@@ -106,6 +150,25 @@
                     {% endif %}
                 </span>
             </div>
+
+            <div class="container">
+                <nav aria-label="...">
+                    <ul class="pagination">
+                      <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                      </li>
+                      <li class="page-item"><a class="page-link" href="#">1</a></li>
+                      <li class="page-item active">
+                        <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                      </li>
+                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                      </li>
+                    </ul>
+                </nav>
+            </div>
+            
         {% endif %}
 
 

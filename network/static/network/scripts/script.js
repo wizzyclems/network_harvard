@@ -17,18 +17,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                 })
                 .then( (response) =>{
-                    console.log("Inside the js response")
-                    console.log(response)
-                    console.log(`Response status : ${response.status}`)
-                    console.log(`Response status text : ${response.statusText}`)
-
                     json_response = response.json()
                     // console.log(json_response)
                     return json_response
                 })
                 .then(result => {
-                    console.log(result.status)
-                    console.log(result)
+                
                     if(result.status == 403 ){
                         console.log("Trigger login for the user")
                         login_modal = $('#loginModal')
@@ -36,7 +30,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         $('#loginModal').modal()
                         return
                     }
-                    evt.target.src = result.liked ?  "/static/network/img/red.png" : "/static/network/img/translike.png" 
+
+                    if( result.liked ){
+                        evt.target.src =  "/static/network/img/red.png" 
+                        evt.target.setAttribute("class","mylikes_like btn_like post_meta_items_like")
+                    }else{
+                        evt.target.src = "/static/network/img/translike.png" 
+                        evt.target.setAttribute("class","mylikes_unlike btn_like post_meta_items_unlike")
+                    }
+                    
                     likes_span = evt.target.nextElementSibling
                     likes_span.innerHTML = result.count_likes == "None" ? likes_span.innerHTML : result.count_likes
                     
