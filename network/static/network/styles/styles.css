@@ -22,6 +22,15 @@
     text-decoration: underline;
 }
 
+.title{
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+.title:hover{
+    text-decoration: underline;
+}
+
 .username{
     color:#8c8c8c;
     font-size: small; 
@@ -120,12 +129,16 @@
 }
 
 .mylikes_unlike:hover{
-    height: 13px;
-    width: 13px;
+    /* height: 13px;
+    width: 13px; */
     border-radius: 50%;
     background-color: #ff69b4;
     animation: pulse 1500ms infinite;
     /* animation: name duration timing-function delay iteration-count forward fill-mode; */
+}
+
+.disable_edit{
+    cursor:not-allowed;
 }
 
 @keyframes pulse{

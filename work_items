@@ -94,17 +94,23 @@
 59. style the edit button
 60. style the paginator component - part 1
 
+14th August 2022
+61. style the paginator component - part 2
+62. Make the signed in user a link to the profile page template for the currently signed in user.
+63. correct the case of disabling the edit image when it is already clicked for one item
+64. style the login modal page.
+65. style the login page
+66. style the register page
+67. enforce input of first naem and last name when users register
+68. restrict a username to each user by ensuring they are unique across the system
+69. allow users to upload their profile image
 
-correct the case of disabling the edit image when it is already clicked for one item
-
-
-restrict a username to each user by ensuring they are unique across the system
 Implement comment redirect when the user is not logged in
-3. enforce input of first naem and last name when users register
-4. allow users to upload their profile image
+4. 
 
 
-
+ansel245
+anselem
 
 Super user
 username: ifiok

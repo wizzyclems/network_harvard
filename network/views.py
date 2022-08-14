@@ -60,6 +60,9 @@ def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
+        firstname = request.POST["firstname"]
+        lastname = request.POST["lastname"]
+        bio = request.POST["bio"]
 
         # Ensure password matches confirmation
         password = request.POST["password"]
@@ -69,9 +72,17 @@ def register(request):
                 "message": "Passwords must match."
             })
 
+        #Ensure the username does not already exist.
+        if get_user(username) :
+            return render(request, "network/register.html", {
+                "message": "Username already in use."
+            })
+
         # Attempt to create new user
         try:
-            user = User.objects.create_user(username, email, password)
+            user = User.objects.create_user(username=username, email=email, password=password,
+               first_name=firstname, last_name=lastname, bio=bio)
+
         except IntegrityError:
             return render(request, "network/register.html", {
                 "message": "Username already taken."
@@ -298,6 +309,13 @@ def follow(request, username):
     return HttpResponseRedirect(reverse("profile",kwargs={"username": username}))
 
     
+def get_user(username):
+    user = None
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        traceback.print_exc
 
+    return user
 
 

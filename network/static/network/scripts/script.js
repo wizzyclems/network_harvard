@@ -184,10 +184,16 @@ document.addEventListener('DOMContentLoaded', function() {
 function enable_edit_buttons(status){
     document.querySelectorAll('.edit_button').forEach(element => {
         if( status ){
-            element.removeAttribute("disabled")
+            element.style.display = "block"
+            // element .removeAttribute("disabled")
+            // element.removeAttribute("class")
+            // element.setAttribute("class","edit_button mylikes_unlike")
         }else{
             // document.querySelectorAll('.edit_button').forEach(element => {
-                element.setAttribute("disabled","disabled")
+                // element.setAttribute("disabled","disabled")
+                // element.removeAttribute("class")
+                // element.setAttribute("class","edit_button disable_edit")
+                element.style.display = "none"
             // })
         }
     })

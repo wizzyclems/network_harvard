@@ -133,39 +133,68 @@
 
         <!-- Pagination -->
         {% if posts.paginator.num_pages > 1 %}
-            <div class="container" style="margin-bottom: 30px">
-                <span class="step-links">
-                    {% if posts.has_previous %}
-                        <a href="?page=1">&laquo; first</a>
-                        <a href="?page={{ posts.previous_page_number }}">previous</a>
-                    {% endif %}
-            
-                    <span class="current">
-                        Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
-                    </span>
-            
-                    {% if posts.has_next %}
-                        <a href="?page={{ posts.next_page_number }}">next</a>
-                        <a href="?page={{ posts.paginator.num_pages }}">last &raquo;</a>
-                    {% endif %}
-                </span>
-            </div>
+        
+            <div class="container align-items-center" >
+                <nav style="margin-top:15px;">
+                    
+                    <ul class="pagination justify-content-center">
+                        {% if posts.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1" tabindex="-1">First</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ posts.previous_page_number }}" tabindex="-1">Previous</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">First</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Previous</a>
+                            </li>
+                        {% endif %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">&nbsp;</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">&nbsp;</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">&nbsp;</a>
+                            </li>
+                        
+                        <li class="page-item active">
+                          <a class="page-link" href="#">Page {{ posts.number }} of {{ posts.paginator.num_pages }}. <span class="sr-only">(current)</span></a>
+                        </li>
 
-            <div class="container">
-                <nav aria-label="...">
-                    <ul class="pagination">
-                      <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                      </li>
-                      <li class="page-item"><a class="page-link" href="#">1</a></li>
-                      <li class="page-item active">
-                        <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
-                      </li>
-                      <li class="page-item"><a class="page-link" href="#">3</a></li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
-                      </li>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">&nbsp;</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">&nbsp;</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">&nbsp;</a>
+                            </li>
+                            
+                        {% if posts.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ posts.next_page_number }}" tabindex="-1">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ posts.paginator.num_pages }}" tabindex="-1">Last</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Next</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Last</a>
+                            </li>
+                        {% endif %}
+
                     </ul>
+                
                 </nav>
             </div>
             
@@ -179,7 +208,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Login</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Network&trade;</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -193,7 +222,9 @@
                         <div class="form-group">
                             <input class="form-control" type="password" name="password" placeholder="Password">
                         </div>
-                        <input class="btn btn-primary" type="submit" value="Login">
+                        <div class="form-group justify-content-end">
+                            <input class="btn btn-outline-dark" type="submit" value="Login">
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
