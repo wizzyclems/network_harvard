@@ -24,7 +24,7 @@
               <ul class="nav justify-content-center mr-auto">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" style="color:#f2f2f2;" href="{% url 'profile' user.username %}">Signed In User: <strong class="title">{{ user.username|title }}</strong></a> 
+                        <a class="nav-link" style="color:#f2f2f2;" href="{% url 'profile' user.username %}">Signed in as: <strong class="title">{{ user.username|title }}</strong></a> 
                     </li>
                 {% endif %}
                 <li class="nav-item">

@@ -103,10 +103,26 @@
 66. style the register page
 67. enforce input of first naem and last name when users register
 68. restrict a username to each user by ensuring they are unique across the system
-69. allow users to upload their profile image
+
+
+15th August 2022
+69. complete the styling for login page
+70. complete the styling for register page
+71. complete styling for the login modal
+72. fix bug on profile when the user is not logged in
+73. fix the bug on follow button when the user is not logged in
+74. allow users to upload their profile image
+75. display users profile image with their post, if any.
+76. display users profile image in their profile page, if any.
+77. style the error message div on the register page template
+78. Ensure no empty username or less than length of 2 characters is allowed
+79. Ensure no empty password field or less than length of 2 characters is allowed
+80. ensure profile image name is changed to match the username and the extension
+81. ensure usernames are stored in lower case and related searches are performed in lowercase
+
 
 Implement comment redirect when the user is not logged in
-4. 
+ 
 
 
 ansel245
@@ -129,3 +145,10 @@ sandra
 tomi
 tomi@test.com
 tomi
+
+
+ella
+
+chris
+
+agnes

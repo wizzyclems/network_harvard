@@ -4,19 +4,19 @@
 
     <div class="container" style="margin-top: 10%; width: 25%;padding: 25px;">
         <div class="row">
-            <div class="col">
+            <div class="col" style="text-align:center;">
                 <h5>Register on Network&trade;</h5>
                 <hr />
             </div>
         </div>
-        <div class="row" style="margin-top:5px;">
-            <div class="col">
+        <div class="row" style="margin-top:5px;margin-bottom:10px;">
+            <div class="col" style="text-align:center; color: red;">
                 {% if message %}
                     {{ message }}
                 {% endif %}
             </div>
         </div>
-        <form action="{% url 'register' %}" method="post">
+        <form action="{% url 'register' %}" method="post" enctype="multipart/form-data" >
             {% csrf_token %}
             <div class="row" style="margin-top:5px;">
                 <div class="col-6">
@@ -67,11 +67,18 @@
             </div>
             <div class="row">
                 <div class="col">
+                    <div class="form-group">
+                        <input type="file" name="photo"  class="form-control" placeholder="Photo"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col" style="text-align:right;">
                     <input class="btn btn-outline-dark" type="submit" value="Register">
                 </div>
             </div>
             <div class="row" style="padding-top: 20px;">
-                <div class="col">
+                <div class="col" style="text-align:right;">
                     <hr/>
                     Already have an account? <a href="{% url 'login' %}">Log In here.</a>
                 </div>

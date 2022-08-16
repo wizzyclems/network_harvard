@@ -27,7 +27,11 @@
     
             <div class="row align-items-center">
                 <div class="col-4">
-                    <img width="100" height="100" style="border-radius: 60px;" src="{% static 'network/img/user.png' %}" alt=""  />
+                    {% if meta.profile_user.photo %}
+                        <img width="100" height="100" style="border-radius: 60px;" src="{{ meta.profile_user.photo.url }}" alt=""  />
+                    {% else %}
+                        <img width="100" height="100" style="border-radius: 60px;" src="{% static 'network/img/user.png' %}" alt=""  />
+                    {% endif %}
                 </div>
                 <div class="col-8">
                     <div class="row">
@@ -35,7 +39,7 @@
                             <h5>{{ meta.profile_user.first_name|upper }} {{ meta.profile_user.last_name|upper }}</h5>
                         </div>
                         <div class="col-4">
-                            {% if user.is_authenticated and user != meta.profile_user %}
+                            {% if user.is_authenticated and user != meta.profile_user and meta.profile_user != None %}
                             
                                 <a href="{% url 'follow' meta.profile_user.username %}" type="button" class="btn btn-outline-dark" id="follow_toggle">
                                     {% if meta.follows_user %}
@@ -54,7 +58,7 @@
             <div class="row"><div class="col">    </div></div>
             <div class="row">
                 <div class="col" style="padding: 10px;">
-                    Food, Fashion, Enterprise, Politics.
+                    {{ meta.profile_user.bio }}
                 </div>
             </div>
             <div class="row" style="padding: 10px;">
@@ -86,7 +90,11 @@
                 {% for post in posts %}
                     <div class="row  align-items-center post">
                         <div class="col-2 justify-content-center" style="padding: 10px 30px;">
-                            <img width="50" height="50" style="border-radius: 60px;" src="{% static 'network/img/user.png' %}" alt=""  />
+                            {% if post.user.photo %}
+                                <img width="50" height="50" style="border-radius: 60px;" src="{{ post.user.photo.url }}" alt=""  />
+                            {% else %}
+                                <img width="50" height="50" style="border-radius: 60px;" src="{% static 'network/img/user.png' %}" alt=""  />
+                            {% endif %}
                         </div>
                         <div class="col-10">
                             <div class="row align-items-start post_meta">
@@ -207,8 +215,8 @@
     <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Network&trade;</h5>
+                <div class="modal-header justify-content-center" >
+                    <h5 class="modal-title" id="exampleModalLongTitle">Login to Network&trade;</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -222,7 +230,7 @@
                         <div class="form-group">
                             <input class="form-control" type="password" name="password" placeholder="Password">
                         </div>
-                        <div class="form-group justify-content-end">
+                        <div class="form-group justify-content-end" style="text-align:right;">
                             <input class="btn btn-outline-dark" type="submit" value="Login">
                         </div>
                     </form>

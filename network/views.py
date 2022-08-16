@@ -58,30 +58,43 @@ def logout_view(request):
 
 def register(request):
     if request.method == "POST":
+        
         username = request.POST["username"]
         email = request.POST["email"]
         firstname = request.POST["firstname"]
         lastname = request.POST["lastname"]
         bio = request.POST["bio"]
-
-        # Ensure password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
-        if password != confirmation:
+
+        # Ensure password matches confirmation
+        if password.strip() != confirmation.strip() or len(password.strip()) <= 2 :
             return render(request, "network/register.html", {
-                "message": "Passwords must match."
+                "message": "Passwords must match and contain more than 2 characters."
+            })
+
+        if len(username.strip()) <= 2 :
+            return render(request, "network/register.html", {
+                    "message": "Username must contain more than 2 characters."
             })
 
         #Ensure the username does not already exist.
-        if get_user(username) :
+        if get_user(username.lower()) :
             return render(request, "network/register.html", {
                 "message": "Username already in use."
             })
 
+        if request.FILES and request.FILES.get("photo") :
+            filename = request.FILES.get("photo").name
+            filename_parts = filename.split(".")
+            extension = filename_parts[ len(filename_parts)-1 ]
+            request.FILES.get("photo").name = request.POST["username"].lower() + "." + extension.lower()
+            photo = request.FILES.get("photo")
+
         # Attempt to create new user
         try:
-            user = User.objects.create_user(username=username, email=email, password=password,
-               first_name=firstname, last_name=lastname, bio=bio)
+            user = User.objects.create_user(username=username.lower(), email=email.lower(), password=password,
+               first_name=firstname, last_name=lastname, bio=bio, photo=photo)
 
         except IntegrityError:
             return render(request, "network/register.html", {
@@ -214,22 +227,23 @@ def following(request):
 
 def profile(request, username):
 
-    profile_user = User.objects.get(username=username)
-    print(f"The profile user is : {profile_user}")
     posts = Post.objects.filter(user__username=username).order_by("-timestamp")
     
     user_following = request.user
-    user_followed = User.objects.get(username=username)
-
     follows_user = False
-    try:
-        following = Following.objects.get(user_following=user_following, user_followed=user_followed)
-        follows_user = True
-    except Following.DoesNotExist:
-        follows_user = False
+   
+    if request.user.is_authenticated :
+        try:
+            following = Following.objects.get(user_following=user_following, user_followed__username=username)
+            follows_user = True
+        except Following.DoesNotExist:
+            follows_user = False
 
-    count_user_follows = Following.objects.filter(user_following=profile_user).count()
-    count_followers = Following.objects.filter(user_followed=profile_user).count()
+    count_user_follows = Following.objects.filter(user_following__username=username).count()
+    count_followers = Following.objects.filter(user_followed__username=username).count()
+
+    profile_user = get_user(username=username)
+    print(f"The profile user is : {profile_user}")
 
 
     meta = { 
