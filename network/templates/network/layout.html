@@ -24,25 +24,45 @@
               <ul class="nav justify-content-center mr-auto">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" style="color:#f2f2f2;" href="{% url 'profile' user.username %}">Signed in as: <strong class="title">{{ user.username|title }}</strong></a> 
+                        <a class="nav-link nav_default" href="{% url 'profile' user.username %}">Signed in as: <strong class="title">{{ user.username|title }}</strong></a> 
                     </li>
                 {% endif %}
                 <li class="nav-item">
-                  <a class="nav-link" style="color:#f2f2f2;" href="{% url 'index' %}">All Posts</a>
+                    {% if request.path == "/" %}
+                        <a class="nav-link my_active"  href="{% url 'index' %}">All Posts</a>
+                    {% else %}
+                        <a class="nav-link nav_default"  href="{% url 'index' %}">All Posts</a>
+                    {% endif %}
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" style="color:#f2f2f2;" href="{% url 'following' %}">Following</a>
+                        {% if "following" in request.path %}
+                            <a class="nav-link my_active"  href="{% url 'following' %}">Following</a>
+                        {% else %}
+                            <a class="nav-link nav_default"  href="{% url 'following' %}">Following</a>
+                        {% endif %}
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" style="color:#f2f2f2;" href="{% url 'logout' %}">Log Out</a>
+                        {% if "logout" in request.path %}
+                            <a class="nav-link my_active"  href="{% url 'logout' %}">Log Out</a>
+                        {% else %}
+                            <a class="nav-link nav_default"  href="{% url 'logout' %}">Log Out</a>
+                        {% endif %}
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" style="color:#f2f2f2;" href="{% url 'login' %}">Log In</a>
+                        {% if "login" in request.path %}
+                            <a class="nav-link my_active"  href="{% url 'login' %}">Log In</a>
+                        {% else %}
+                            <a class="nav-link nav_default"  href="{% url 'login' %}">Log In</a>
+                        {% endif %}
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" style="color:#f2f2f2;" href="{% url 'register' %}">Register</a>
+                        {% if "register" in request.path %}
+                            <a class="nav-link my_active"  href="{% url 'register' %}">Register</a>
+                        {% else %}
+                            <a class="nav-link nav_default"  href="{% url 'register' %}">Register</a>
+                        {% endif %}
                     </li>
                 {% endif %}
               </ul>

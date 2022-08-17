@@ -36,6 +36,20 @@
     font-size: small; 
 }
 
+.my_active{
+    background-color:#f2f2f2;
+    color: black;
+}
+
+.nav_default{
+    color: #f2f2f2;
+    text-decoration: none;
+}
+
+.nav_default:hover{
+    color: #b3b3b3;
+    text-decoration: none;
+}
 
 .edit_button{
     color:#8c8c8c;
